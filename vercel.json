@@ -11,14 +11,27 @@
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
-				"includeFiles": ["apps.config.js", "consts.js", "server/**/*", "package.json"]
+				"includeFiles": [
+					"apps.config.js",
+					"consts.js",
+					"server/src/public/**/*",
+					"server/dist/**/*"
+				]
 			}
 		}
 	],
 	"rewrites": [
 		{
-			"source": "/p/:project([^/]+)/:file(.*\\.\\w+)$",
-			"destination": "/server/dist/$1/$2"
+			"source": "/(.*)",
+			"destination": "/$1"
+		},
+		{
+			"source": "/p/:project/:file*",
+			"destination": "/server/dist/$project/$file*"
+		},
+		{
+			"source": "/api/(.*)",
+			"destination": "/server/src/index.js"
 		},
 		{
 			"source": "/(.*)",
