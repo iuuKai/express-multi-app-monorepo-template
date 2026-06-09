@@ -1,0 +1,26 @@
+{
+	"name": "express-multi-app-monorepo-template",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"dev": "cd server && pnpm dev",
+		"build:all": "node scripts/build-all.js",
+		"install:all": "node scripts/install-all.js"
+	},
+	"license": "MIT",
+	"packageManager": "pnpm@11.4.0",
+	"keywords": [
+		"express",
+		"monorepo",
+		"multi-app",
+		"template",
+		"pnpm",
+		"fullstack",
+		"server",
+		"dist",
+		"static-server",
+		"frontend",
+		"backend",
+		"web-template"
+	]
+}
