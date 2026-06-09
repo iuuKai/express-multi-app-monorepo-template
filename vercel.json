@@ -19,10 +19,6 @@
 	],
 	"rewrites": [
 		{
-			"source": "/p/:project/:file*",
-			"destination": "/server/dist/$project/$file*"
-		},
-		{
 			"source": "/(.*)",
 			"destination": "/server/src/index.js"
 		}
