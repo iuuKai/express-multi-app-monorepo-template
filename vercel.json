@@ -8,10 +8,7 @@
 		},
 		{
 			"src": "server/src/index.js",
-			"use": "@vercel/node",
-			"config": {
-				"includeFiles": "apps.config.cjs|consts.js|server/**/*"
-			}
+			"use": "@vercel/node"
 		}
 	],
 	"rewrites": [
