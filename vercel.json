@@ -2,15 +2,6 @@
 	"version": 2,
 	"builds": [
 		{
-			"src": "package.json",
-			"use": "@vercel/static-build",
-			"config": {
-				"distDir": "server/dist",
-				"buildCommand": "pnpm build:all",
-				"installCommand": "pnpm install:all"
-			}
-		},
-		{
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
@@ -19,6 +10,14 @@
 		}
 	],
 	"rewrites": [
+		{
+			"source": "^/p/([^/]+)/(.*\\.\\w+)$",
+			"destination": "/server/dist/$1/$2"
+		},
+		{
+			"source": "/api/(.*)",
+			"destination": "/server/src/index.js"
+		},
 		{
 			"source": "/(.*)",
 			"destination": "/server/src/index.js"
