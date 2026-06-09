@@ -12,21 +12,24 @@
 		},
 		{
 			"src": "server/src/index.js",
-			"use": "@vercel/node"
+			"use": "@vercel/node",
+			"config": {
+				"includeFiles": "server/**/*|dist/**/*|apps.config.js|consts.js"
+			}
 		}
 	],
 	"rewrites": [
 		{
 			"source": "/css/:file*",
-			"destination": "/css/:file*"
+			"destination": "/server/src/public/css/:file*"
 		},
 		{
 			"source": "/js/:file*",
-			"destination": "/js/:file*"
+			"destination": "/server/src/public/js/:file*"
 		},
 		{
 			"source": "/images/:file*",
-			"destination": "/images/:file*"
+			"destination": "/server/src/public/images/:file*"
 		},
 		{
 			"source": "/p/:project/:file*",
@@ -41,7 +44,7 @@
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "/",
+			"source": "/:path*",
 			"destination": "/server/src/index.js"
 		}
 	]
