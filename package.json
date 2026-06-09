@@ -4,6 +4,7 @@
 	"description": "",
 	"scripts": {
 		"dev": "cd server && pnpm dev",
+		"build": "node scripts/build-all.js",
 		"build:all": "node scripts/build-all.js",
 		"install:all": "node scripts/install-all.js"
 	},
