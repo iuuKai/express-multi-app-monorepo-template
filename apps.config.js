@@ -24,8 +24,8 @@ module.exports = [
 		type: 'spa',
 		dist: 'apps/demo1/dist',
 		entry: 'index.html',
-		install: 'yarn install',
-		build: 'yarn build'
+		install: 'pnpm install',
+		build: 'pnpm build'
 	},
 	{
 		name: 'demo2',
@@ -33,8 +33,8 @@ module.exports = [
 		type: 'mpa',
 		dist: 'apps/demo2/dist',
 		entry: 'index.html',
-		install: 'yarn install',
-		build: 'yarn build'
+		install: 'pnpm install',
+		build: 'pnpm build'
 	},
 	{
 		name: 'demo3',
@@ -42,7 +42,7 @@ module.exports = [
 		type: 'static',
 		dist: 'apps/demo3/dist',
 		entry: 'pages/layout.html',
-		install: 'yarn install',
+		install: 'pnpm install',
 		build: 'node build'
 	}
 ]

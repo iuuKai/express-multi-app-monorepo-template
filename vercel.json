@@ -2,18 +2,19 @@
 	"version": 2,
 	"builds": [
 		{
+			"src": "package.json",
+			"use": "@vercel/static-build",
+			"config": {
+				"distDir": "server/dist",
+				"buildCommand": "pnpm build:all",
+				"installCommand": "pnpm install:all"
+			}
+		},
+		{
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
-				"buildCommand": "pnpm scripts/build-all.js",
-				"includeFiles": [
-					"package.json",
-					"pnpm-lock.yaml",
-					"scripts/**/*",
-					"apps.config.js",
-					"consts.js",
-					"server/**/*"
-				]
+				"includeFiles": ["scripts/**/*", "apps.config.js", "consts.js", "server/**/*"]
 			}
 		}
 	],
