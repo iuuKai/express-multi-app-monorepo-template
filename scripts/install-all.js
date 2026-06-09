@@ -1,6 +1,6 @@
 const { execSync } = require('child_process')
 const path = require('path')
-const APPS_CONFIG = require('../apps.config')
+const APPS_CONFIG = require('../apps.config.cjs')
 
 // 根目录
 const rootDir = path.resolve(__dirname, '..')

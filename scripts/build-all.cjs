@@ -1,7 +1,7 @@
 const { execSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
-const APPS_CONFIG = require('../apps.config')
+const APPS_CONFIG = require('../apps.config.cjs')
 
 // 递归删除目录
 function deleteDir(dir) {
@@ -41,6 +41,9 @@ if (!fs.existsSync(mainDistDir)) {
 	fs.mkdirSync(mainDistDir, { recursive: true })
 }
 
+// 创建 package.json 标记为 ES Module
+fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 'module' }))
+
 // =========================================
 // 2. 构建所有子项目（你的配置）
 // =========================================
@@ -59,7 +62,7 @@ APPS_CONFIG.forEach(proj => {
 
 	// 先安装子项目依赖
 	console.log(`📦 安装 ${proj.name} 依赖...`)
-	const installCmd = proj.install || 'yarn install'
+	const installCmd = proj.install || 'pnpm install'
 	try {
 		execSync(installCmd, {
 			stdio: 'inherit',

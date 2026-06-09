@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const fs = require('fs')
 const router = express.Router()
-const APPS_CONFIG = require('../../../apps.config')
+const APPS_CONFIG = require('../../../apps.config.cjs')
 
 // HTML 不缓存响应头
 const NO_CACHE_HEADERS = {

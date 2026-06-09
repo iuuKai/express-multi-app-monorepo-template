@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 // 配置文件
-const { BASE_URL } = require('./env')
+const { BASE_URL } = require('./env.cjs')
 
 // 路径
 const srcDir = path.resolve(__dirname, 'src')

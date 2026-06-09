@@ -5,8 +5,8 @@
 	"description": "",
 	"scripts": {
 		"dev": "cd server && pnpm dev",
-		"build": "node scripts/build-all.js",
-		"build:all": "node scripts/build-all.js",
+		"build": "node scripts/build-all.cjs",
+		"build:all": "node scripts/build-all.cjs",
 		"install:all": "node scripts/install-all.js"
 	},
 	"license": "MIT",

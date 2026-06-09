@@ -2,7 +2,7 @@ const router = require('express').Router()
 const path = require('path')
 const fs = require('fs')
 const { GLOBAL_ROUTE_PREFIX } = require('../../../consts')
-const APPS_CONFIG = require('../../../apps.config')
+const APPS_CONFIG = require('../../../apps.config.cjs')
 
 // express 首页
 router.get('/', (req, res) => {

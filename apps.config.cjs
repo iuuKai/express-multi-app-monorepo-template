@@ -43,6 +43,6 @@ module.exports = [
 		dist: 'apps/demo3/dist',
 		entry: 'pages/layout.html',
 		install: 'pnpm install',
-		build: 'node build'
+		build: 'node build.cjs'
 	}
 ]
