@@ -3,10 +3,6 @@
 	"buildCommand": "yarn build:all",
 	"installCommand": "yarn install:all",
 	"builds": [
-		{ "src": "apps.config.js", "use": "@vercel/static" },
-		{ "src": "consts.js", "use": "@vercel/static" },
-		{ "src": "server/src/public/**/*", "use": "@vercel/static" },
-		{ "src": "server/dist/**/*", "use": "@vercel/static" },
 		{
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
@@ -21,10 +17,6 @@
 		}
 	],
 	"rewrites": [
-		{
-			"source": "/(.*)",
-			"destination": "/$1"
-		},
 		{
 			"source": "^/p/([^/]+)/(.*\\.\\w+)$",
 			"destination": "/server/dist/$1/$2"
