@@ -1,15 +1,21 @@
 {
-	"version": 2,
 	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"version": 2,
 	"buildCommand": "yarn build:all",
 	"installCommand": "yarn install:all",
-	"outputDirectory": "server",
-	"framework": null,
-	"functions": {
-		"server/src/index.js": {
-			"runtime": "nodejs20.x"
+	"builds": [
+		{ "src": "apps.config.js", "use": "@vercel/static" },
+		{ "src": "consts.js", "use": "@vercel/static" },
+		{ "src": "server/src/public/**/*", "use": "@vercel/static" },
+		{ "src": "server/dist/**/*", "use": "@vercel/static" },
+		{
+			"src": "server/src/index.js",
+			"use": "@vercel/node",
+			"config": {
+				"includeFiles": ["apps.config.js", "consts.js", "server/**/*", "package.json"]
+			}
 		}
-	},
+	],
 	"rewrites": [
 		{
 			"source": "/p/:project([^/]+)/:file(.*\\.\\w+)$",
