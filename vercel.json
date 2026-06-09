@@ -25,8 +25,8 @@
 			"destination": "/images/$1"
 		},
 		{
-			"source": "/p/:project/:file(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map))$",
-			"destination": "/dist/:project/:file"
+			"source": "/p/:project/:file*",
+			"destination": "/dist/:project/:file*"
 		},
 		{
 			"source": "/api/(.*)",
