@@ -13,7 +13,7 @@
 	],
 	"rewrites": [
 		{
-			"source": "^/p/([^/]+)/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$",
+			"source": "/p/([^/]+)/.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
 			"destination": "/$1/$2"
 		},
 		{
@@ -21,11 +21,11 @@
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "^/p/([^/]+)/?$",
+			"source": "/p/([^/]+)/?$",
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "^/p/([^/]+)/.*$",
+			"source": "/p/([^/]+)/.*",
 			"destination": "/server/src/index.js"
 		},
 		{
