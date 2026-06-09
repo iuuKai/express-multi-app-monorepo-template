@@ -11,11 +11,20 @@
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
-				"includeFiles": ["scripts/**/*", "apps.config.js", "consts.js", "server/**/*"]
+				"includeFiles": [
+					"apps.config.js",
+					"consts.js",
+					"server/src/public/**/*",
+					"server/dist/**/*"
+				]
 			}
 		}
 	],
 	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/$1"
+		},
 		{
 			"source": "^/p/([^/]+)/(.*\\.\\w+)$",
 			"destination": "/server/dist/$1/$2"
