@@ -3,12 +3,9 @@
 	"buildCommand": "pnpm install:all && pnpm build:all",
 	"devCommand": "pnpm dev",
 	"outputDirectory": "server",
-	"build": {
-		"env": {}
-	},
 	"functions": {
 		"server/src/index.js": {
-			"runtime": "nodejs20"
+			"runtime": "@vercel/node@3"
 		}
 	},
 	"rewrites": [
