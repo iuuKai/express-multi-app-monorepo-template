@@ -11,26 +11,26 @@
 			"use": "@vercel/node"
 		}
 	],
-	"rewrites": [
+	"routes": [
 		{
-			"source": "/p/([^/]+)/.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
-			"destination": "/$1/$2"
+			"src": "/p/([^/]+)/.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
+			"dest": "/$1/$2"
 		},
 		{
-			"source": "/api/(.*)",
-			"destination": "/server/src/index.js"
+			"src": "/api/(.*)",
+			"dest": "/server/src/index.js"
 		},
 		{
-			"source": "/p/([^/]+)/?$",
-			"destination": "/server/src/index.js"
+			"src": "^/p/([^/]+)/?$",
+			"dest": "/server/src/index.js"
 		},
 		{
-			"source": "/p/([^/]+)/.*",
-			"destination": "/server/src/index.js"
+			"src": "^/p/([^/]+)/.*$",
+			"dest": "/server/src/index.js"
 		},
 		{
-			"source": "/",
-			"destination": "/server/src/index.js"
+			"src": "/",
+			"dest": "/server/src/index.js"
 		}
 	]
 }
