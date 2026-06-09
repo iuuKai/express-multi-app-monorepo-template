@@ -1,10 +1,10 @@
 {
 	"version": 2,
+	"buildCommand": "pnpm install:all && pnpm build:all",
+	"devCommand": "pnpm dev",
 	"build": {
 		"env": {},
-		"command": "pnpm install:all && pnpm build:all",
-		"outputDirectory": "server",
-		"devCommand": "pnpm dev"
+		"outputDirectory": "server"
 	},
 	"functions": {
 		"server/src/index.js": {
