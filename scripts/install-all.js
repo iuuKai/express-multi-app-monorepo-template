@@ -10,7 +10,7 @@ const rootDir = path.resolve(__dirname, '..')
 // =========================================
 console.log('🔧 安装主项目依赖...')
 try {
-	execSync('yarn install', {
+	execSync('pnpm install', {
 		stdio: 'inherit',
 		cwd: rootDir
 	})
