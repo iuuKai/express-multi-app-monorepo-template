@@ -1,51 +1,31 @@
-# 依赖包
-node_modules
-*/node_modules
+# 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# 包管理器锁（只保留pnpm-lock.yaml，注释掉其他）
-# package-lock.json
-# yarn.lock
-pnpm-lock.yaml
-
-# 构建产物
-server/dist
-apps/*/dist
+# 依赖 & 构建
+node_modules/
 dist
+*.local
 
 # 环境变量
 .env
 .env.local
-.env.development
-.env.production
-.env.example
+.env.development.local
+.env.test.local
+.env.production.local
 
-# 日志
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# 测试覆盖率
+coverage/
+.nyc_output/
 
-# 系统缓存文件
-.DS_Store
-Thumbs.db
-.idea
+# 编辑器配置
 .vscode/*
-!.vscode/settings.json
 !.vscode/extensions.json
-!.vscode/tasks.json
-!.vscode/launch.json
-
-# 操作系统临时文件
-*.swp
-*.swo
-*~
-
-# 运行缓存
-.npm
-.eslintcache
-.pnp
-.pnp.js
-coverage
-.nyc_output
+.idea/
+.DS_Store
+*.sw?
