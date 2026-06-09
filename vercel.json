@@ -13,7 +13,23 @@
 	],
 	"rewrites": [
 		{
-			"source": "/(.*)",
+			"source": "^/p/([^/]+)/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$",
+			"destination": "/$1/$2"
+		},
+		{
+			"source": "/api/(.*)",
+			"destination": "/server/src/index.js"
+		},
+		{
+			"source": "^/p/([^/]+)/?$",
+			"destination": "/server/src/index.js"
+		},
+		{
+			"source": "^/p/([^/]+)/.*$",
+			"destination": "/server/src/index.js"
+		},
+		{
+			"source": "/",
 			"destination": "/server/src/index.js"
 		}
 	]
