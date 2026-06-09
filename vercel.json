@@ -1,26 +1,23 @@
 {
 	"version": 2,
-	"buildCommand": "yarn build:all",
-	"installCommand": "yarn install:all",
 	"builds": [
 		{
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
-				"includeFiles": ["apps.config.js", "consts.js", "server/**/*"],
-				"distDir": "server/dist"
+				"buildCommand": "pnpm scripts/build-all.js",
+				"includeFiles": [
+					"package.json",
+					"pnpm-lock.yaml",
+					"scripts/**/*",
+					"apps.config.js",
+					"consts.js",
+					"server/**/*"
+				]
 			}
 		}
 	],
 	"rewrites": [
-		{
-			"source": "^/p/([^/]+)/(.*\\.\\w+)$",
-			"destination": "/server/dist/$1/$2"
-		},
-		{
-			"source": "/api/(.*)",
-			"destination": "/server/src/index.js"
-		},
 		{
 			"source": "/(.*)",
 			"destination": "/server/src/index.js"
