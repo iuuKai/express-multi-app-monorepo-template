@@ -31,8 +31,8 @@ const sendEntry = (res, distPath, entryFile) => {
 APPS_CONFIG.forEach(item => {
 	const { name, type, entry = 'index.html' } = item
 
-	// 子项目打包后会被复制到 server/dist/{name}/ 目录下
-	const distPath = path.join(__dirname, '../../dist', name)
+	// 子项目打包后会被复制到 dist/{name}/ 目录下
+	const distPath = path.join(__dirname, '../../../dist', name)
 	const entryFile = entry.replace(/^\//, '') // 去除前导斜杠
 
 	// 检查子项目 dist 目录是否存在（可能因为无 build 指令而未打包）

@@ -34,7 +34,7 @@ function copyDir(src, dest) {
 // 1. 创建主项目 dist 目录
 // =========================================
 const rootDir = path.resolve(__dirname, '..')
-const mainDistDir = path.join(rootDir, 'server', 'dist')
+const mainDistDir = path.join(rootDir, 'dist')
 
 // 确保主 dist 目录存在
 if (!fs.existsSync(mainDistDir)) {
