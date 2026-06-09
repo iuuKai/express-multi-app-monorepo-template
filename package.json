@@ -1,7 +1,6 @@
 {
 	"name": "express-multi-app-monorepo-template",
 	"version": "1.0.0",
-	"type": "module",
 	"description": "",
 	"scripts": {
 		"dev": "cd server && pnpm dev",
