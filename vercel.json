@@ -70,15 +70,23 @@
 			"destination": "/server/src/public/images/:file*"
 		},
 		{
-			"source": "/p/:project/:file*",
-			"destination": "/dist/:project/:file*"
+			"source": "/p/:project/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
+			"destination": "/dist/:project/$1"
 		},
 		{
-			"source": "/p/:project/:path*",
+			"source": "/p/:project/?$",
+			"destination": "/server/src/index.js"
+		},
+		{
+			"source": "/p/:project/(.*)\\.html$",
 			"destination": "/server/src/index.js"
 		},
 		{
 			"source": "/api/(.*)",
+			"destination": "/server/src/index.js"
+		},
+		{
+			"source": "/(.*)\\.html$",
 			"destination": "/server/src/index.js"
 		},
 		{
