@@ -57,41 +57,14 @@
 		}
 	],
 	"rewrites": [
-		{
-			"source": "/p/:project/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
-			"destination": "/dist/:project/$1"
-		},
-		{
-			"source": "/css/:file*",
-			"destination": "/css/:file*"
-		},
-		{
-			"source": "/js/:file*",
-			"destination": "/js/:file*"
-		},
-		{
-			"source": "/images/:file*",
-			"destination": "/images/:file*"
-		},
-		{
-			"source": "/p/:project(/?)$",
-			"destination": "/server/src/index.js"
-		},
-		{
-			"source": "/p/:project/(.*)\\.html$",
-			"destination": "/server/src/index.js"
-		},
-		{
-			"source": "/api/:path*",
-			"destination": "/server/src/index.js"
-		},
-		{
-			"source": "/index.html",
-			"destination": "/server/src/index.js"
-		},
-		{
-			"source": "/$",
-			"destination": "/server/src/index.js"
-		}
+		{ "source": "/$", "destination": "/server/src/index.js" },
+		{ "source": "/index.html", "destination": "/server/src/index.js" },
+		{ "source": "/css/:file*", "destination": "/css/:file*" },
+		{ "source": "/js/:file*", "destination": "/js/:file*" },
+		{ "source": "/images/:file*", "destination": "/images/:file*" },
+		{ "source": "/p/:project/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$", "destination": "/dist/:project/$1" },
+		{ "source": "/p/:project/?$", "destination": "/server/src/index.js" },
+		{ "source": "/p/:project/(.*)\\.html$", "destination": "/server/src/index.js" },
+		{ "source": "/api/:path*", "destination": "/server/src/index.js" }
 	]
 }
