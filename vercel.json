@@ -74,7 +74,7 @@
 			"destination": "/dist/:project/$1"
 		},
 		{
-			"source": "/p/:project/?$",
+			"source": "/p/:project(/?)$",
 			"destination": "/server/src/index.js"
 		},
 		{
