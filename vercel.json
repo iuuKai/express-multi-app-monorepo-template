@@ -7,14 +7,14 @@
 			"config": { "distDir": "dist" }
 		},
 		{
-			"src": "server/src/public/**/*",
+			"src": "server/src/public",
 			"use": "@vercel/static"
 		},
 		{
 			"src": "server/src/index.js",
 			"use": "@vercel/node",
 			"config": {
-				"includeFiles": "server/**/*|dist/**/*|apps.config.js|consts.js"
+				"includeFiles": ["dist/**/*","apps.config.js","consts.js","server/src/**/*"]
 			}
 		}
 	],
