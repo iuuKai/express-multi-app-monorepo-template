@@ -50,24 +50,7 @@ APPS_CONFIG.forEach(item => {
 	// SPA 子路径处理
 	if (type === 'spa') {
 		const routePattern = new RegExp(`^/${name}/.+$`)
-		router.get(routePattern, (req, res, next) => {
-			// 判断是否为本地开发环境
-			const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1'
-
-			if (isLocal) {
-				// 本地开发：所有子路径都返回入口 HTML（方便开发调试）
-				sendEntry(res, distPath, entryFile)
-			} else {
-				// Vercel 部署：只处理 HTML 请求（/ 结尾或 .html 结尾或无扩展名）
-				const subPath = req.path.replace(`/${name}/`, '') || ''
-				if (subPath.endsWith('/') || subPath.endsWith('.html') || !subPath.includes('.')) {
-					sendEntry(res, distPath, entryFile)
-				} else {
-					// 非 HTML 请求，交给 express.static 处理
-					next()
-				}
-			}
-		})
+		router.get(routePattern, (req, res) => sendEntry(res, distPath, entryFile))
 	}
 })
 
