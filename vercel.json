@@ -58,6 +58,10 @@
 	],
 	"rewrites": [
 		{
+			"source": "/p/:project/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
+			"destination": "/dist/:project/$1"
+		},
+		{
 			"source": "/css/:file*",
 			"destination": "/server/src/public/css/:file*"
 		},
@@ -68,10 +72,6 @@
 		{
 			"source": "/images/:file*",
 			"destination": "/server/src/public/images/:file*"
-		},
-		{
-			"source": "/p/:project/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$",
-			"destination": "/dist/:project/$1"
 		},
 		{
 			"source": "/p/:project(/?)$",
