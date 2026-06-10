@@ -82,15 +82,15 @@
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "/api/(.*)",
+			"source": "/api/:path*",
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "/(.*)\\.html$",
+			"source": "/index.html",
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "/(.*)",
+			"source": "/$",
 			"destination": "/server/src/index.js"
 		}
 	]
