@@ -7,7 +7,7 @@
 			"config": { "distDir": "dist" }
 		},
 		{
-			"src": "server/src/public/**/*",
+			"src": "server/src/public",
 			"use": "@vercel/static"
 		},
 		{
@@ -63,15 +63,15 @@
 		},
 		{
 			"source": "/css/:file*",
-			"destination": "/server/src/public/css/:file*"
+			"destination": "/css/:file*"
 		},
 		{
 			"source": "/js/:file*",
-			"destination": "/server/src/public/js/:file*"
+			"destination": "/js/:file*"
 		},
 		{
 			"source": "/images/:file*",
-			"destination": "/server/src/public/images/:file*"
+			"destination": "/images/:file*"
 		},
 		{
 			"source": "/p/:project(/?)$",
