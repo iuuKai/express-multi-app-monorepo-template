@@ -7,80 +7,11 @@
 			"config": { "distDir": "dist" }
 		},
 		{
-			"src": "server/src/public/**/*",
-			"use": "@vercel/static"
-		},
-		{
 			"src": "server/src/index.js",
-			"use": "@vercel/node",
-			"config": {
-				"includeFiles": "server/**/*|dist/**/*|apps.config.js|consts.js"
-			}
-		}
-	],
-	"headers": [
-		{
-			"source": "/css/:file*",
-			"headers": [
-				{
-					"key": "Cache-Control",
-					"value": "public, max-age=31536000, immutable"
-				}
-			]
-		},
-		{
-			"source": "/js/:file*",
-			"headers": [
-				{
-					"key": "Cache-Control",
-					"value": "public, max-age=31536000, immutable"
-				}
-			]
-		},
-		{
-			"source": "/images/:file*",
-			"headers": [
-				{
-					"key": "Cache-Control",
-					"value": "public, max-age=31536000, immutable"
-				}
-			]
-		},
-		{
-			"source": "/dist/:project/:file(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$",
-			"headers": [
-				{
-					"key": "Cache-Control",
-					"value": "public, max-age=31536000, immutable"
-				}
-			]
+			"use": "@vercel/node"
 		}
 	],
 	"rewrites": [
-		{
-			"source": "/css/:file*",
-			"destination": "/server/src/public/css/:file*"
-		},
-		{
-			"source": "/js/:file*",
-			"destination": "/server/src/public/js/:file*"
-		},
-		{
-			"source": "/images/:file*",
-			"destination": "/server/src/public/images/:file*"
-		},
-		{
-			"source": "/p/:project/:file*",
-			"destination": "/dist/:project/:file*"
-		},
-		{
-			"source": "/p/:project/:path*",
-			"destination": "/server/src/index.js"
-		},
-		{
-			"source": "/api/(.*)",
-			"destination": "/server/src/index.js"
-		},
 		{
 			"source": "/(.*)",
 			"destination": "/server/src/index.js"
