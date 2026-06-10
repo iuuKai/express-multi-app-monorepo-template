@@ -9,15 +9,21 @@ const assetExtensions = require('./config/asset-extensions')
 app.use(cors())
 app.use(express.json())
 
-app.use(express.static(path.join(__dirname, 'public'))) // 静态资源托管
+const isLocal = req => req.hostname === 'localhost' || req.hostname === '127.0.0.1'
+app.use((req, res, next) => {
+	if (isLocal(req)) {
+		express.static(path.join(__dirname, 'public'))(req, res, next)
+	} else {
+		next()
+	}
+}) // 静态资源托管
 app.use('/', require('./routes/web')) // server 自己的页面路由
 app.use('/api', require('./api')) // 接口
 // app.use(GLOBAL_ROUTE_PREFIX, require('./routes/static')) // 前端静态代理
 app.use(GLOBAL_ROUTE_PREFIX, (req, res, next) => {
 	const ext = require('path').extname(req.path)
-	const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1'
 	// 如果是静态资源后缀，直接 next() 放过
-	if (assetExtensions.includes(ext) && !isLocal) {
+	if (assetExtensions.includes(ext) && !isLocal(req)) {
 		return next()
 	}
 
