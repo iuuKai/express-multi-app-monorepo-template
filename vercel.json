@@ -44,7 +44,7 @@
 			"destination": "/server/src/index.js"
 		},
 		{
-			"source": "/:path*",
+			"source": "/(.*)",
 			"destination": "/server/src/index.js"
 		}
 	]
