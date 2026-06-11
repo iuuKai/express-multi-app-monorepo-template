@@ -37,39 +37,63 @@ function installDependencies(proj, cwd, rootDir) {
 	console.log(`📦 安装 ${proj.name} 依赖...`)
 	const installCmd = proj.install || 'pnpm install'
 
-	// 方法1：直接在子项目目录安装
+	// 方法1：直接在子项目目录安装（禁用 workspace 模式）
 	try {
 		console.log(`📂 工作目录: ${cwd}`)
 		console.log(`🔧 执行命令: ${installCmd}`)
+		const env = {
+			...process.env,
+			PATH: process.env.PATH,
+			PNPM_IGNORED_BUILDS: 'true',
+			PNPM_WORKSPACE_CONFIG: '' // 禁用 workspace 配置
+		}
 		execSync(installCmd, {
 			stdio: 'inherit',
 			cwd,
-			env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+			env
 		})
 		console.log(`✅ ${proj.name} 依赖安装完成`)
 		return true
 	} catch (e) {
 		console.log(`⚠️ ${proj.name} 依赖安装失败: ${e.message || e}`)
-	}
 
-	// 方法2：使用 pnpm install --ignore-scripts 跳过构建脚本（如果原来的命令没有这个参数）
-	if (!installCmd.includes('--ignore-scripts')) {
+		// 方法2：尝试使用 --config.workspace=false 禁用 workspace 模式
 		try {
-			console.log(`🔄 尝试使用 pnpm install --ignore-scripts...`)
-			execSync('pnpm install --ignore-scripts', {
+			console.log(`🔄 尝试使用 pnpm install --ignore-scripts --config.workspace=false...`)
+			execSync('pnpm install --ignore-scripts --config.workspace=false', {
 				stdio: 'inherit',
 				cwd,
 				env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
 			})
-			console.log(`✅ ${proj.name} 依赖安装完成（使用 --ignore-scripts）`)
+			console.log(`✅ ${proj.name} 依赖安装完成（禁用 workspace）`)
 			return true
 		} catch (e2) {
-			console.log(`❌ ${proj.name} 依赖安装失败（--ignore-scripts 方式）: ${e2.message || e2}`)
+			console.log(`❌ ${proj.name} 依赖安装失败（禁用 workspace）: ${e2.message || e2}`)
+
+			// 方法3：尝试临时移除 pnpm-workspace.yaml
+			try {
+				console.log(`🔄 尝试临时移除 pnpm-workspace.yaml...`)
+				const workspacePath = path.join(rootDir, 'pnpm-workspace.yaml')
+				const backupWorkspacePath = workspacePath + '.backup'
+				if (fs.existsSync(workspacePath)) {
+					fs.renameSync(workspacePath, backupWorkspacePath)
+				}
+				execSync('pnpm install --ignore-scripts', {
+					stdio: 'inherit',
+					cwd,
+					env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+				})
+				if (fs.existsSync(backupWorkspacePath)) {
+					fs.renameSync(backupWorkspacePath, workspacePath)
+				}
+				console.log(`✅ ${proj.name} 依赖安装完成（临时移除 workspace）`)
+				return true
+			} catch (e3) {
+				console.log(`❌ ${proj.name} 依赖安装失败（临时移除 workspace）: ${e3.message || e3}`)
+				return false
+			}
 		}
 	}
-
-	console.log(`❌ ${proj.name} 依赖安装失败`)
-	return false
 }
 
 // =========================================

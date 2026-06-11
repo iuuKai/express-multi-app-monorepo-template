@@ -31,9 +31,29 @@ function copyDir(src, dest) {
 }
 
 // =========================================
-// 1. 创建主项目 dist 目录
+// 临时处理 pnpm-workspace.yaml
 // =========================================
 const rootDir = path.resolve(__dirname, '..')
+const workspacePath = path.join(rootDir, 'pnpm-workspace.yaml')
+const backupWorkspacePath = workspacePath + '.backup'
+
+function backupWorkspace() {
+	if (fs.existsSync(workspacePath)) {
+		fs.renameSync(workspacePath, backupWorkspacePath)
+		console.log('📤 临时移除 pnpm-workspace.yaml（防止 workspace 模式干扰子项目安装）')
+	}
+}
+
+function restoreWorkspace() {
+	if (fs.existsSync(backupWorkspacePath)) {
+		fs.renameSync(backupWorkspacePath, workspacePath)
+		console.log('📥 恢复 pnpm-workspace.yaml')
+	}
+}
+
+// =========================================
+// 1. 创建主项目 dist 目录
+// =========================================
 const mainDistDir = path.join(rootDir, 'dist')
 
 // 确保主 dist 目录存在
@@ -48,6 +68,14 @@ fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 
 // 2. 构建所有子项目（你的配置）
 // =========================================
 console.log('\n📦 开始构建所有子项目...')
+
+// 在构建前临时移除 pnpm-workspace.yaml
+backupWorkspace()
+
+// 确保在脚本结束时恢复 workspace 配置
+process.on('exit', restoreWorkspace)
+process.on('SIGINT', restoreWorkspace)
+process.on('uncaughtException', restoreWorkspace)
 
 // 记录总开始时间
 const startTime = Date.now()
@@ -105,34 +133,59 @@ APPS_CONFIG.forEach(proj => {
 	// 先安装子项目依赖
 	console.log(`📦 安装 ${proj.name} 依赖...`)
 	const installCmd = proj.install || 'pnpm install'
+
+	// 方法1：直接在子项目目录安装（禁用 workspace 模式）
 	try {
 		console.log(`📂 工作目录: ${cwd}`)
 		console.log(`🔧 执行命令: ${installCmd}`)
+		const env = {
+			...process.env,
+			PATH: process.env.PATH,
+			PNPM_IGNORED_BUILDS: 'true',
+			PNPM_WORKSPACE_CONFIG: '' // 禁用 workspace 配置
+		}
 		execSync(installCmd, {
 			stdio: 'inherit',
 			cwd,
-			env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+			env
 		})
 		console.log(`✅ ${proj.name} 依赖安装完成`)
 	} catch (e) {
 		console.log(`⚠️ ${proj.name} 依赖安装失败: ${e.message || e}`)
-		// 尝试使用 pnpm install --ignore-scripts 跳过构建脚本（如果原来的命令没有这个参数）
-		if (!installCmd.includes('--ignore-scripts')) {
+
+		// 方法2：尝试使用 --config.workspace=false 禁用 workspace 模式
+		try {
+			console.log(`🔄 尝试使用 pnpm install --ignore-scripts --config.workspace=false...`)
+			execSync('pnpm install --ignore-scripts --config.workspace=false', {
+				stdio: 'inherit',
+				cwd,
+				env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+			})
+			console.log(`✅ ${proj.name} 依赖安装完成（禁用 workspace）`)
+		} catch (e2) {
+			console.log(`❌ ${proj.name} 依赖安装失败（禁用 workspace）: ${e2.message || e2}`)
+
+			// 方法3：尝试移除临时的 pnpm-workspace.yaml
 			try {
-				console.log(`🔄 尝试使用 pnpm install --ignore-scripts...`)
+				console.log(`🔄 尝试临时移除 pnpm-workspace.yaml...`)
+				const workspacePath = path.join(rootDir, 'pnpm-workspace.yaml')
+				const backupWorkspacePath = workspacePath + '.backup'
+				if (fs.existsSync(workspacePath)) {
+					fs.renameSync(workspacePath, backupWorkspacePath)
+				}
 				execSync('pnpm install --ignore-scripts', {
 					stdio: 'inherit',
 					cwd,
 					env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
 				})
-				console.log(`✅ ${proj.name} 依赖安装完成（使用 --ignore-scripts）`)
-			} catch (e2) {
-				console.log(`❌ ${proj.name} 依赖安装失败: ${e2.message || e2}`)
+				if (fs.existsSync(backupWorkspacePath)) {
+					fs.renameSync(backupWorkspacePath, workspacePath)
+				}
+				console.log(`✅ ${proj.name} 依赖安装完成（临时移除 workspace）`)
+			} catch (e3) {
+				console.log(`❌ ${proj.name} 依赖安装失败（临时移除 workspace）: ${e3.message || e3}`)
 				return
 			}
-		} else {
-			console.log(`❌ ${proj.name} 依赖安装失败`)
-			return
 		}
 	}
 
