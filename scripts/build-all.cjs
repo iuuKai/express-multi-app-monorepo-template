@@ -165,26 +165,39 @@ APPS_CONFIG.forEach(proj => {
 		} catch (e2) {
 			console.log(`❌ ${proj.name} 依赖安装失败（禁用 workspace）: ${e2.message || e2}`)
 
-			// 方法3：尝试移除临时的 pnpm-workspace.yaml
+			// 方法3：尝试使用 npm 代替 pnpm 安装
 			try {
-				console.log(`🔄 尝试临时移除 pnpm-workspace.yaml...`)
-				const workspacePath = path.join(rootDir, 'pnpm-workspace.yaml')
-				const backupWorkspacePath = workspacePath + '.backup'
-				if (fs.existsSync(workspacePath)) {
-					fs.renameSync(workspacePath, backupWorkspacePath)
-				}
-				execSync('pnpm install --ignore-scripts', {
+				console.log(`🔄 尝试使用 npm install --ignore-scripts...`)
+				execSync('npm install --ignore-scripts', {
 					stdio: 'inherit',
 					cwd,
-					env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+					env: { ...process.env, PATH: process.env.PATH }
 				})
-				if (fs.existsSync(backupWorkspacePath)) {
-					fs.renameSync(backupWorkspacePath, workspacePath)
-				}
-				console.log(`✅ ${proj.name} 依赖安装完成（临时移除 workspace）`)
+				console.log(`✅ ${proj.name} 依赖安装完成（使用 npm）`)
 			} catch (e3) {
-				console.log(`❌ ${proj.name} 依赖安装失败（临时移除 workspace）: ${e3.message || e3}`)
-				return
+				console.log(`❌ ${proj.name} 依赖安装失败（使用 npm）: ${e3.message || e3}`)
+
+				// 方法4：尝试移除临时的 pnpm-workspace.yaml
+				try {
+					console.log(`🔄 尝试临时移除 pnpm-workspace.yaml...`)
+					const workspacePath = path.join(rootDir, 'pnpm-workspace.yaml')
+					const backupWorkspacePath = workspacePath + '.backup'
+					if (fs.existsSync(workspacePath)) {
+						fs.renameSync(workspacePath, backupWorkspacePath)
+					}
+					execSync('pnpm install --ignore-scripts', {
+						stdio: 'inherit',
+						cwd,
+						env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+					})
+					if (fs.existsSync(backupWorkspacePath)) {
+						fs.renameSync(backupWorkspacePath, workspacePath)
+					}
+					console.log(`✅ ${proj.name} 依赖安装完成（临时移除 workspace）`)
+				} catch (e4) {
+					console.log(`❌ ${proj.name} 依赖安装失败（临时移除 workspace）: ${e4.message || e4}`)
+					return
+				}
 			}
 		}
 	}
@@ -200,6 +213,17 @@ APPS_CONFIG.forEach(proj => {
 	} catch (e) {
 		console.log(`❌ ${proj.name} 构建失败: ${e.message || e}`)
 		throw e
+	}
+
+	// 如果是 hexo-ssg 项目，需要复制用户自定义的 banner.jpg 覆盖主题默认图片
+	if (proj.name === 'hexo-ssg') {
+		const sourceBanner = path.join(cwd, 'source/css/images/banner.jpg')
+		const publicBanner = path.join(cwd, 'public/css/images/banner.jpg')
+		if (fs.existsSync(sourceBanner) && fs.existsSync(publicBanner)) {
+			console.log(`🔄 复制用户自定义 banner.jpg...`)
+			fs.copyFileSync(sourceBanner, publicBanner)
+			console.log(`✅ 用户自定义 banner.jpg 已覆盖`)
+		}
 	}
 
 	// 将子项目的构建产物复制到主项目的 dist 目录下

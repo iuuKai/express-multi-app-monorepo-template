@@ -198,6 +198,17 @@ function buildSingle(appName) {
 		process.exit(1)
 	}
 
+	// 如果是 hexo-ssg 项目，需要复制用户自定义的 banner.jpg 覆盖主题默认图片
+	if (proj.name === 'hexo-ssg') {
+		const sourceBanner = path.join(cwd, 'source/css/images/banner.jpg')
+		const publicBanner = path.join(cwd, 'public/css/images/banner.jpg')
+		if (fs.existsSync(sourceBanner) && fs.existsSync(publicBanner)) {
+			console.log(`🔄 复制用户自定义 banner.jpg...`)
+			fs.copyFileSync(sourceBanner, publicBanner)
+			console.log(`✅ 用户自定义 banner.jpg 已覆盖`)
+		}
+	}
+
 	// 将子项目的构建产物复制到主项目的 dist 目录下
 	const subProjDist = path.resolve(rootDir, proj.dist)
 	const targetDist = path.join(mainDistDir, proj.name)

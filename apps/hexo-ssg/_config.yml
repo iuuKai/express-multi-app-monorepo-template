@@ -26,6 +26,15 @@ permalink: :year/:month/:day/:title/
 
 
 
+
+
+
+
+
+
+
+
+
 root: /p/hexo-ssg/
 permalink_defaults:
 pretty_urls:
