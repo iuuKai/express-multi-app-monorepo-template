@@ -49,9 +49,38 @@ fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 
 // =========================================
 console.log('\n📦 开始构建所有子项目...')
 
+// 记录总开始时间
+const startTime = Date.now()
+
 APPS_CONFIG.forEach(proj => {
-	if (!proj.build) {
-		console.log(`\n⏭️ 跳过 ${proj.name}（无 build 配置）`)
+	if (!proj.build && !proj.source) {
+		console.log(`\n⏭️ 跳过 ${proj.name}（无 build 和 source 配置）`)
+		return
+	}
+
+	// 记录子项目开始时间
+	const projStartTime = Date.now()
+
+	// 如果有 source，直接拷贝源文件到 dist
+	if (proj.source) {
+		console.log(`\n=== 正在处理：${proj.name}（source 模式）==`)
+
+		const sourcePath = path.resolve(rootDir, proj.source)
+		const targetDist = path.join(mainDistDir, proj.name)
+
+		console.log(`📤 复制 ${proj.name} 从 ${proj.source} 到 dist/${proj.name}/...`)
+
+		if (fs.existsSync(sourcePath)) {
+			deleteDir(targetDist)
+			copyDir(sourcePath, targetDist)
+			console.log(`✅ ${proj.name} 复制完成`)
+		} else {
+			console.log(` ${proj.name} 的 source 目录不存在: ${sourcePath}`)
+		}
+
+		// 记录结束时间并输出耗时
+		const projEndTime = Date.now()
+		console.log(`️ ${proj.name} 耗时: ${((projEndTime - projStartTime) / 1000).toFixed(2)}s`)
 		return
 	}
 
@@ -92,6 +121,13 @@ APPS_CONFIG.forEach(proj => {
 	} else {
 		console.log(`❌ ${proj.name} 的 dist 目录不存在: ${subProjDist}`)
 	}
+
+	// 记录子项目结束时间并输出耗时
+	const projEndTime = Date.now()
+	console.log(`⏱️ ${proj.name} 耗时: ${((projEndTime - projStartTime) / 1000).toFixed(2)}s`)
 })
 
-console.log('\n🎉 所有项目构建完成！')
+// 记录总结束时间并输出总耗时
+const endTime = Date.now()
+console.log(`\n⏱️ 总构建耗时: ${((endTime - startTime) / 1000).toFixed(2)}s`)
+console.log('🎉 所有项目构建完成！')

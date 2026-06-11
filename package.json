@@ -6,6 +6,7 @@
 		"dev": "cd server && pnpm dev",
 		"build": "node scripts/build-all.cjs",
 		"build:all": "node scripts/build-all.cjs",
+		"build:single": "node scripts/build-single.cjs",
 		"install:all": "node scripts/install-all.js"
 	},
 	"license": "MIT",

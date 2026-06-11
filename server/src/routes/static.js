@@ -3,13 +3,8 @@ const path = require('path')
 const fs = require('fs')
 const router = express.Router()
 const APPS_CONFIG = require('../../../apps.config.cjs')
-
-// HTML 不缓存响应头
-const NO_CACHE_HEADERS = {
-	'Cache-Control': 'no-cache, no-store, must-revalidate',
-	Pragma: 'no-cache',
-	Expires: '0'
-}
+const handlers = require('../handlers')
+const { NO_CACHE_HEADERS } = require('../constants/headers')
 
 // 禁止 HTML 缓存（sendEntry 已处理入口文件，此处处理其他 HTML 请求）
 router.use((req, res, next) => {
@@ -47,10 +42,11 @@ APPS_CONFIG.forEach(item => {
 	// 根路径入口
 	router.get(`/${name}`, (req, res) => sendEntry(res, distPath, entryFile))
 
-	// SPA 子路径处理
-	if (type === 'spa') {
-		const routePattern = new RegExp(`^/${name}/.+$`)
-		router.get(routePattern, (req, res) => sendEntry(res, distPath, entryFile))
+	// 根据 type 类型注册对应的路由处理器
+	if (type?.toLowerCase() === 'spa') {
+		handlers.spa(router, name, distPath, entryFile, sendEntry)
+	} else if (type?.toLowerCase() === 'ssg') {
+		handlers.ssg(router, name, distPath, entryFile, sendEntry)
 	}
 })
 
