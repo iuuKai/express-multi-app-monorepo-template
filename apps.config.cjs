@@ -60,7 +60,7 @@ module.exports = [
 		type: 'ssg',
 		dist: 'apps/hexo-ssg/public',
 		entry: 'index.html',
-		install: 'pnpm install',
+		install: 'pnpm install --ignore-scripts',
 		build: 'pnpm build'
 	}
 ]

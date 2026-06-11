@@ -31,6 +31,48 @@ function copyDir(src, dest) {
 }
 
 // =========================================
+// 安装依赖函数
+// =========================================
+function installDependencies(proj, cwd, rootDir) {
+	console.log(`📦 安装 ${proj.name} 依赖...`)
+	const installCmd = proj.install || 'pnpm install'
+
+	// 方法1：直接在子项目目录安装
+	try {
+		console.log(`📂 工作目录: ${cwd}`)
+		console.log(`🔧 执行命令: ${installCmd}`)
+		execSync(installCmd, {
+			stdio: 'inherit',
+			cwd,
+			env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+		})
+		console.log(`✅ ${proj.name} 依赖安装完成`)
+		return true
+	} catch (e) {
+		console.log(`⚠️ ${proj.name} 依赖安装失败: ${e.message || e}`)
+	}
+
+	// 方法2：使用 pnpm install --ignore-scripts 跳过构建脚本（如果原来的命令没有这个参数）
+	if (!installCmd.includes('--ignore-scripts')) {
+		try {
+			console.log(`🔄 尝试使用 pnpm install --ignore-scripts...`)
+			execSync('pnpm install --ignore-scripts', {
+				stdio: 'inherit',
+				cwd,
+				env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+			})
+			console.log(`✅ ${proj.name} 依赖安装完成（使用 --ignore-scripts）`)
+			return true
+		} catch (e2) {
+			console.log(`❌ ${proj.name} 依赖安装失败（--ignore-scripts 方式）: ${e2.message || e2}`)
+		}
+	}
+
+	console.log(`❌ ${proj.name} 依赖安装失败`)
+	return false
+}
+
+// =========================================
 // 主函数：构建单个项目
 // =========================================
 function buildSingle(appName) {
@@ -97,29 +139,38 @@ function buildSingle(appName) {
 	// 关键：路径必须正确
 	const cwd = path.resolve(rootDir, 'apps', proj.name)
 
+	// 验证目录是否存在
+	if (!fs.existsSync(cwd)) {
+		console.log(`❌ ${proj.name} 的目录不存在: ${cwd}`)
+		process.exit(1)
+	}
+
+	// 验证 package.json 是否存在
+	const packageJsonPath = path.join(cwd, 'package.json')
+	if (!fs.existsSync(packageJsonPath)) {
+		console.log(`❌ ${proj.name} 的 package.json 不存在: ${packageJsonPath}`)
+		process.exit(1)
+	}
+
 	// 先安装子项目依赖
-	console.log(`\n📦 安装 ${proj.name} 依赖...`)
-	const installCmd = proj.install || 'pnpm install'
-	try {
-		execSync(installCmd, {
-			stdio: 'inherit',
-			cwd
-		})
-		console.log(`✅ ${proj.name} 依赖安装完成`)
-	} catch (e) {
-		console.log(`⚠️ ${proj.name} 依赖安装失败，但继续构建`)
+	if (!installDependencies(proj, cwd, rootDir)) {
+		console.log(`❌ ${proj.name} 依赖安装失败，终止构建`)
+		process.exit(1)
 	}
 
 	// 执行子项目构建命令
 	console.log(`\n🔨 执行 ${proj.name} 构建...`)
+	console.log(`📂 工作目录: ${cwd}`)
+	console.log(`🔧 构建命令: ${proj.build}`)
 	try {
 		execSync(proj.build, {
 			stdio: 'inherit',
-			cwd
+			cwd,
+			env: { ...process.env, PATH: process.env.PATH }
 		})
 		console.log(`✅ ${proj.name} 构建完成`)
 	} catch (e) {
-		console.log(`❌ ${proj.name} 构建失败`)
+		console.log(`❌ ${proj.name} 构建失败: ${e.message || e}`)
 		process.exit(1)
 	}
 

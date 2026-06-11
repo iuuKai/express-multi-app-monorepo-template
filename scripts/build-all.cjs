@@ -87,26 +87,67 @@ APPS_CONFIG.forEach(proj => {
 	console.log(`\n=== 正在构建：${proj.name} ==`)
 
 	// 关键：路径必须正确
-	const cwd = path.resolve(__dirname, '../apps', proj.name)
+	const cwd = path.resolve(rootDir, 'apps', proj.name)
+
+	// 验证目录是否存在
+	if (!fs.existsSync(cwd)) {
+		console.log(`❌ ${proj.name} 的目录不存在: ${cwd}`)
+		return
+	}
+
+	// 验证 package.json 是否存在
+	const packageJsonPath = path.join(cwd, 'package.json')
+	if (!fs.existsSync(packageJsonPath)) {
+		console.log(`❌ ${proj.name} 的 package.json 不存在: ${packageJsonPath}`)
+		return
+	}
 
 	// 先安装子项目依赖
 	console.log(`📦 安装 ${proj.name} 依赖...`)
 	const installCmd = proj.install || 'pnpm install'
 	try {
+		console.log(`📂 工作目录: ${cwd}`)
+		console.log(`🔧 执行命令: ${installCmd}`)
 		execSync(installCmd, {
 			stdio: 'inherit',
-			cwd
+			cwd,
+			env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
 		})
 		console.log(`✅ ${proj.name} 依赖安装完成`)
 	} catch (e) {
-		console.log(`⚠️ ${proj.name} 依赖安装失败，但继续构建`)
+		console.log(`⚠️ ${proj.name} 依赖安装失败: ${e.message || e}`)
+		// 尝试使用 pnpm install --ignore-scripts 跳过构建脚本（如果原来的命令没有这个参数）
+		if (!installCmd.includes('--ignore-scripts')) {
+			try {
+				console.log(`🔄 尝试使用 pnpm install --ignore-scripts...`)
+				execSync('pnpm install --ignore-scripts', {
+					stdio: 'inherit',
+					cwd,
+					env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+				})
+				console.log(`✅ ${proj.name} 依赖安装完成（使用 --ignore-scripts）`)
+			} catch (e2) {
+				console.log(`❌ ${proj.name} 依赖安装失败: ${e2.message || e2}`)
+				return
+			}
+		} else {
+			console.log(`❌ ${proj.name} 依赖安装失败`)
+			return
+		}
 	}
 
 	// 执行子项目构建命令
-	execSync(proj.build, {
-		stdio: 'inherit',
-		cwd
-	})
+	console.log(`🔨 执行构建命令: ${proj.build}`)
+	try {
+		execSync(proj.build, {
+			stdio: 'inherit',
+			cwd
+		})
+		console.log(`✅ ${proj.name} 构建完成`)
+	} catch (e) {
+		console.log(`❌ ${proj.name} 构建失败: ${e.message || e}`)
+		throw e
+	}
 
 	// 将子项目的构建产物复制到主项目的 dist 目录下
 	const subProjDist = path.resolve(rootDir, proj.dist)
