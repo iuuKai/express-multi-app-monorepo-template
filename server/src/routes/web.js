@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 		// 生成项目链接 HTML
 		const appsLinks = APPS_CONFIG.map(item => {
 			const route = `${GLOBAL_ROUTE_PREFIX}/${item.name}`
-			return `<a href="${route}" target="_self">
+			return `<a href="${route}" target="_blank">
 					<div class="apps-item">
 						<h3>${item.name}</h3>
 						<p>${item.description}</p>

@@ -3,10 +3,10 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "hexo clean && node bin/set-env.js --production && hexo generate",
+		"server": "hexo server",
+		"build": "hexo clean && hexo generate",
 		"clean": "hexo clean",
-		"deploy": "hexo deploy",
-		"server": "node bin/set-env.js && hexo server"
+		"deploy": "hexo deploy"
 	},
 	"hexo": {
 		"version": "8.1.2"

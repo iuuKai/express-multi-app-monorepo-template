@@ -32,8 +32,8 @@ $(function () {
 			url: pageUrl,
 			type: 'GET',
 			success: function (htmlFragment) {
-				// 替换资源占位符 %BASE_URL% 为全局BASE_URL
-				const realHtml = htmlFragment.replaceAll('%BASE_URL%', BASE_URL)
+				// 替换资源占位符 %{BASE_URL}% 为全局BASE_URL
+				const realHtml = htmlFragment.replaceAll('%{BASE_URL}%', BASE_URL)
 				$container.html(realHtml)
 
 				// link页面加载完毕后请求接口

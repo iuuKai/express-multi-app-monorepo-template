@@ -4,10 +4,17 @@
 	"description": "",
 	"scripts": {
 		"dev": "cd server && pnpm dev",
+		"dev:app": "node scripts/dev-single.cjs",
 		"build": "node scripts/build-all.cjs",
 		"build:all": "node scripts/build-all.cjs",
-		"build:single": "node scripts/build-single.cjs",
-		"install:all": "node scripts/install-all.js"
+		"build:app": "node scripts/build-single.cjs",
+		"install:all": "node scripts/install-all.cjs",
+		"install:app": "node scripts/install-single.cjs",
+		"clean": "node scripts/clean.cjs",
+		"clean:all": "node scripts/clean-all.cjs",
+		"clean:app": "node scripts/clean-single.cjs",
+		"copy": "node scripts/copy-all.cjs",
+		"copy:app": "node scripts/copy-single.cjs"
 	},
 	"license": "MIT",
 	"packageManager": "pnpm@11.4.0",

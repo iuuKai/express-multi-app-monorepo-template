@@ -19,25 +19,31 @@ try {
 }
 
 // =========================================
-// 2. 安装所有子项目（读取你的配置）
+// 2. 安装所有子项目
 // =========================================
 console.log('\n📦 开始安装所有子项目依赖...')
 
 APPS_CONFIG.forEach(proj => {
+	// source 模式 → 跳过
+	if (proj.sourceDir) {
+		console.log(`\n⏭️ 跳过 ${proj.name}（source 模式不执行 install）`)
+		return
+	}
+
 	// 没有 install 命令 → 跳过
-	if (!proj.install) {
+	if (!proj.installCmd) {
 		console.log(`\n⏭️ 跳过 ${proj.name}（无 install 配置）`)
 		return
 	}
 
 	console.log(`\n=== 正在安装：${proj.name} ==`)
 
-	// 子项目目录（和你 build 用的一模一样）
+	// 子项目目录
 	const cwd = path.resolve(__dirname, '../apps', proj.name)
 
 	// 执行 install 命令
 	try {
-		execSync(proj.install, {
+		execSync(proj.installCmd, {
 			stdio: 'inherit',
 			cwd
 		})

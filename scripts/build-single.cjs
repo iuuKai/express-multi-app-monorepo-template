@@ -35,7 +35,7 @@ function copyDir(src, dest) {
 // =========================================
 function installDependencies(proj, cwd, rootDir) {
 	console.log(`📦 安装 ${proj.name} 依赖...`)
-	const installCmd = proj.install || 'pnpm install'
+	const installCmd = proj.installCmd || 'pnpm install'
 
 	// 方法1：直接在子项目目录安装（禁用 workspace 模式）
 	try {
@@ -107,7 +107,7 @@ function buildSingle(appName) {
 		console.log(`❌ 未找到项目: ${appName}`)
 		console.log('可用项目列表:')
 		APPS_CONFIG.forEach(p => {
-			console.log(`  - ${p.name}: ${p.description}`)
+			console.log(`  - ${p.name}`)
 		})
 		process.exit(1)
 	}
@@ -124,19 +124,18 @@ function buildSingle(appName) {
 	fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 'module' }))
 
 	console.log(`\n=== 正在构建：${proj.name} ==`)
-	console.log(`📋 描述: ${proj.description}`)
 
 	// 记录开始时间
 	const startTime = Date.now()
 
 	// 如果有 source，直接拷贝源文件到 dist
-	if (proj.source) {
+	if (proj.sourceDir) {
 		console.log(`\n📤 source 模式：直接复制文件...`)
 
-		const sourcePath = path.resolve(rootDir, proj.source)
+		const sourcePath = path.resolve(rootDir, proj.sourceDir)
 		const targetDist = path.join(mainDistDir, proj.name)
 
-		console.log(`复制从 ${proj.source} 到 dist/${proj.name}/...`)
+		console.log(`复制从 ${proj.sourceDir} 到 dist/${proj.name}/...`)
 
 		if (fs.existsSync(sourcePath)) {
 			deleteDir(targetDist)
@@ -155,7 +154,7 @@ function buildSingle(appName) {
 	}
 
 	// 检查是否有 build 命令
-	if (!proj.build) {
+	if (!proj.buildCmd) {
 		console.log(`❌ ${proj.name} 没有配置 build 命令`)
 		process.exit(1)
 	}
@@ -185,9 +184,9 @@ function buildSingle(appName) {
 	// 执行子项目构建命令
 	console.log(`\n🔨 执行 ${proj.name} 构建...`)
 	console.log(`📂 工作目录: ${cwd}`)
-	console.log(`🔧 构建命令: ${proj.build}`)
+	console.log(`🔧 构建命令: ${proj.buildCmd}`)
 	try {
-		execSync(proj.build, {
+		execSync(proj.buildCmd, {
 			stdio: 'inherit',
 			cwd,
 			env: { ...process.env, PATH: process.env.PATH }
@@ -210,7 +209,7 @@ function buildSingle(appName) {
 	}
 
 	// 将子项目的构建产物复制到主项目的 dist 目录下
-	const subProjDist = path.resolve(rootDir, proj.dist)
+	const subProjDist = path.resolve(rootDir, proj.outputDir)
 	const targetDist = path.join(mainDistDir, proj.name)
 
 	console.log(`\n📤 复制 ${proj.name} 到主项目 dist/${proj.name}/...`)
@@ -240,7 +239,7 @@ if (args.length === 0) {
 	console.log('使用方法: pnpm build:single <项目名称>')
 	console.log('\n可用项目列表:')
 	APPS_CONFIG.forEach(p => {
-		console.log(`  - ${p.name}: ${p.description}`)
+		console.log(`  - ${p.name}`)
 	})
 	process.exit(1)
 }

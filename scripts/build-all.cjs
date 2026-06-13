@@ -65,7 +65,7 @@ if (!fs.existsSync(mainDistDir)) {
 fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 'module' }))
 
 // =========================================
-// 2. 构建所有子项目（你的配置）
+// 2. 构建所有子项目
 // =========================================
 console.log('\n📦 开始构建所有子项目...')
 
@@ -81,7 +81,7 @@ process.on('uncaughtException', restoreWorkspace)
 const startTime = Date.now()
 
 APPS_CONFIG.forEach(proj => {
-	if (!proj.build && !proj.source) {
+	if (!proj.buildCmd && !proj.sourceDir) {
 		console.log(`\n⏭️ 跳过 ${proj.name}（无 build 和 source 配置）`)
 		return
 	}
@@ -90,13 +90,13 @@ APPS_CONFIG.forEach(proj => {
 	const projStartTime = Date.now()
 
 	// 如果有 source，直接拷贝源文件到 dist
-	if (proj.source) {
-		console.log(`\n=== 正在处理：${proj.name}（source 模式）==`)
+	if (proj.sourceDir) {
+		console.log(`\n=== 正在处理：${proj.name}（sourceDir 模式）==`)
 
-		const sourcePath = path.resolve(rootDir, proj.source)
+		const sourcePath = path.resolve(rootDir, proj.sourceDir)
 		const targetDist = path.join(mainDistDir, proj.name)
 
-		console.log(`📤 复制 ${proj.name} 从 ${proj.source} 到 dist/${proj.name}/...`)
+		console.log(`📤 复制 ${proj.name} 从 ${proj.sourceDir} 到 dist/${proj.name}/...`)
 
 		if (fs.existsSync(sourcePath)) {
 			deleteDir(targetDist)
@@ -132,7 +132,7 @@ APPS_CONFIG.forEach(proj => {
 
 	// 先安装子项目依赖
 	console.log(`📦 安装 ${proj.name} 依赖...`)
-	const installCmd = proj.install || 'pnpm install'
+	const installCmd = proj.installCmd || 'pnpm install'
 
 	// 方法1：直接在子项目目录安装（禁用 workspace 模式）
 	try {
@@ -203,9 +203,9 @@ APPS_CONFIG.forEach(proj => {
 	}
 
 	// 执行子项目构建命令
-	console.log(`🔨 执行构建命令: ${proj.build}`)
+	console.log(`🔨 执行构建命令: ${proj.buildCmd}`)
 	try {
-		execSync(proj.build, {
+		execSync(proj.buildCmd, {
 			stdio: 'inherit',
 			cwd
 		})
@@ -227,7 +227,7 @@ APPS_CONFIG.forEach(proj => {
 	}
 
 	// 将子项目的构建产物复制到主项目的 dist 目录下
-	const subProjDist = path.resolve(rootDir, proj.dist)
+	const subProjDist = path.resolve(rootDir, proj.outputDir)
 	const targetDist = path.join(mainDistDir, proj.name)
 
 	console.log(`📤 复制 ${proj.name} 到主项目 dist/${proj.name}/...`)
