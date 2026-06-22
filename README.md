@@ -65,7 +65,7 @@ express-multi-app-monorepo-template/
 
 ```bash
 # 1. 克隆仓库
-git clone <仓库地址>
+git clone https://github.com/iuuKai/express-multi-app-monorepo-template.git
 cd express-multi-app-monorepo-template
 
 # 2. 构建所有项目（自动安装依赖）
