@@ -3,18 +3,15 @@ import { fileURLToPath } from 'node:url'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import webpack from 'webpack'
-import dotenv from 'dotenv'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const pages = ['home', 'about', 'link']
 
+const BASE_URL = '/p/webpack-ejs-mpa/'
+
 export default (env, argv) => {
 	const isProd = argv.mode === 'production'
-	// 手动加载对应环境的 .env 文件
-	const envPath = isProd ? './.env.production' : './.env'
-	const envConfig = dotenv.config({ path: envPath }).parsed || {}
-	const BASE_URL = envConfig.BASE_URL || '/'
 
 	const entryObj = {}
 	const htmlPlugins = []

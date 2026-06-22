@@ -7,8 +7,6 @@
 ```bash
 # 构建所有项目（会自动执行安装依赖）
 pnpm build
-# 或者
-pnpm build:all
 
 # 启动 express 服务器
 pnpm dev
@@ -140,6 +138,12 @@ pnpm build
 - 位置：`express-multi-app-monorepo-template/apps/<app-name>/`
 - 用途：存放各个子项目的源码和各自的构建产物
 - dist 位置：`apps/<app-name>/public`（以 hexo-ssg 为例）
+
+### server 目录
+
+- 位置：`express-multi-app-monorepo-template/server/`
+- 用途：Express 代理服务器的源码
+- 构建时会自动安装依赖，无需额外配置
 
 ### apps.config.cjs 配置文件
 

@@ -68,7 +68,7 @@ module.exports = [
 		type: 'ssg',
 		entry: 'index.html',
 		outputDir: 'apps/vitepress-ssg/docs/.vitepress/dist',
-		installCmd: 'pnpm install',
+		installCmd: 'pnpm approve-builds && pnpm install',
 		buildCmd: 'pnpm docs:build',
 		devCmd: 'pnpm docs:dev'
 	},

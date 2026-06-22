@@ -6,7 +6,7 @@
 		"dev": "cd server && pnpm dev",
 		"dev:app": "node scripts/dev-single.cjs",
 		"build": "node scripts/build-all.cjs",
-		"build:all": "node scripts/build-all.cjs",
+		"build:local": "node scripts/build-local.cjs",
 		"build:app": "node scripts/build-single.cjs",
 		"install:all": "node scripts/install-all.cjs",
 		"install:app": "node scripts/install-single.cjs",

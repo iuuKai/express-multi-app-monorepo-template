@@ -131,7 +131,9 @@ pnpm dev
 const GLOBAL_ROUTE_PREFIX = '/p' // 修改为你想要的前缀
 ```
 
-修改后需要同步更新所有子项目的 `baseURL` 配置。
+修改后需手动同步更新所有子项目的 base 路径配置。
+
+**重要说明**：由于各框架的 base 配置名称不统一（Vue/Vite 用 `base`、Next.js 用 `basePath`、Nuxt 用 `runtimeConfig.public.baseURL`），且子项目相互独立，脚本无法自动统一处理。因此 `GLOBAL_ROUTE_PREFIX` 仅控制 Express 路由层，子项目的 base 路径需用户根据实际情况手动配置。
 
 ## 📖 路由规则
 

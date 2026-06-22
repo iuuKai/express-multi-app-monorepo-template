@@ -52,7 +52,25 @@ function restoreWorkspace() {
 }
 
 // =========================================
-// 1. 创建主项目 dist 目录
+// 1. 安装 server 依赖
+// =========================================
+const serverDir = path.join(rootDir, 'server')
+console.log('\n📦 开始安装 server 依赖...')
+
+try {
+	execSync('pnpm install', {
+		stdio: 'inherit',
+		cwd: serverDir,
+		env: { ...process.env, PATH: process.env.PATH, PNPM_IGNORED_BUILDS: 'true' }
+	})
+	console.log('✅ server 依赖安装完成\n')
+} catch (e) {
+	console.log('⚠️ server 依赖安装失败: ' + (e.message || e))
+	console.log('⚠️ 继续执行构建...\n')
+}
+
+// =========================================
+// 2. 创建主项目 dist 目录
 // =========================================
 const mainDistDir = path.join(rootDir, 'dist')
 
@@ -65,7 +83,7 @@ if (!fs.existsSync(mainDistDir)) {
 fs.writeFileSync(path.join(mainDistDir, 'package.json'), JSON.stringify({ type: 'module' }))
 
 // =========================================
-// 2. 构建所有子项目
+// 3. 构建所有子项目
 // =========================================
 console.log('\n📦 开始构建所有子项目...')
 

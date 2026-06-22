@@ -8,9 +8,6 @@ export default defineNuxtConfig({
 			title: 'Nuxt4 SSG'
 		}
 	},
-	devServer: {
-		port: 4000
-	},
 	nitro: {
 		preset: 'static',
 		output: {
