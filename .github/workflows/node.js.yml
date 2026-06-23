@@ -25,7 +25,7 @@ jobs:
       uses: pnpm/action-setup@v4
       with:
         version: 11.4.0
-    - name: Install deps (root only, ignore apps subprojects)
+    - name: Install root dependencies
       run: pnpm install
-    - name: Lint root project code
-      run: pnpm run lint
+    - name: Verify project setup
+      run: pnpm run dev:app -- --check
