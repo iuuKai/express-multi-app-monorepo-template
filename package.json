@@ -21,7 +21,7 @@
 	"license": "MIT",
 	"packageManager": "pnpm@11.4.0",
 	"engines": {
-		"node": ">=22.13.0",
+		"node": ">=20.0.0 <=20.x",
 		"pnpm": ">=11.4.0"
 	},
 	"keywords": [
