@@ -28,4 +28,4 @@ jobs:
     - name: Install root dependencies
       run: pnpm install
     - name: Verify project setup
-      run: pnpm run dev:app -- --check
+      run: pnpm run dev -- --check
