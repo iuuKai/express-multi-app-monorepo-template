@@ -80,8 +80,7 @@ export default (env, argv) => {
 		devServer: {
 			static: path.resolve(__dirname, 'dist'),
 			hot: true,
-			historyApiFallback: false,
-			open: true
+			historyApiFallback: false
 		}
 	}
 }

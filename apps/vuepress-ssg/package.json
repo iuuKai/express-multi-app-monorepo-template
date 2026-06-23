@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"docs:dev": "vuepress dev docs -p 1007",
+		"docs:dev": "vuepress dev docs --port 1007",
 		"docs:build": "vuepress build docs"
 	},
 	"devDependencies": {

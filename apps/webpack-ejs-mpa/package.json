@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "webpack serve --mode development -p 1008",
+		"dev": "webpack serve --mode development --port 1008",
 		"build": "webpack --mode production"
 	},
 	"keywords": [],
