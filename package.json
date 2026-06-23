@@ -20,6 +20,10 @@
 	},
 	"license": "MIT",
 	"packageManager": "pnpm@11.4.0",
+	"engines": {
+		"node": ">=22.13.0",
+		"pnpm": ">=11.4.0"
+	},
 	"keywords": [
 		"express",
 		"monorepo",

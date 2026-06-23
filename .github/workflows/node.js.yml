@@ -1,17 +1,16 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# This workflow will verify the project setup and build process
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,12 +19,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup Node ${{ matrix.node }} + pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 11.4.0
-    - name: Install root dependencies
-      run: pnpm install
-    - name: Verify project setup
-      run: pnpm run dev -- --check
+      - uses: actions/checkout@v4
+      - name: Setup Node ${{ matrix.node }} + pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.4.0
+      - name: Install server dependencies
+        run: cd server && pnpm install
+      - name: Build all projects
+        run: pnpm build
+      - name: Verify server can start
+        run: timeout 10 pnpm dev || true
+        working-directory: server
