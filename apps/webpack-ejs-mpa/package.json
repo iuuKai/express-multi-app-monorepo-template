@@ -10,13 +10,6 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"devEngines": {
-		"packageManager": {
-			"name": "pnpm",
-			"version": "^11.4.0",
-			"onFail": "download"
-		}
-	},
 	"type": "module",
 	"devDependencies": {
 		"copy-webpack-plugin": "^14.0.0",
