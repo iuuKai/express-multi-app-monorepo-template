@@ -6,6 +6,39 @@
 
 演示地址：<https://express-multi-app-monorepo-template.vercel.app/>
 
+---
+
+## ⚠️ 重要限制声明
+
+> **请在使用前仔细阅读以下限制条件！**
+
+| 限制类型                | 说明                                                                        |
+| ----------------------- | --------------------------------------------------------------------------- |
+| **不支持 SSR**          | 构建产物必须是静态资源，不支持服务端渲染（SSR）                             |
+| **Serverless 环境限制** | 部署到 Vercel 使用 Serverless Functions，有执行时长（10秒）、文件系统等限制 |
+| **性能有限**            | 所有请求经过 Express 代理，无法充分利用 Vercel CDN 加速能力                 |
+| **仅适合轻量项目**      | 个人演示项目、作品集、技术博客、项目原型、学习 Demo                         |
+
+### ❌ 不适用场景
+
+- 企业级应用
+- 高流量网站
+- 电商平台
+- 支付系统
+- 需要 SSR 的项目（如 Next.js、Nuxt 默认 SSR 模式）
+- 对性能有较高要求的项目
+
+### ✅ 适用场景
+
+- 个人作品集展示
+- 技术博客（Hexo、VuePress 等静态博客）
+- 文档站点
+- 项目原型演示
+- 微前端架构学习与演示
+- 轻量级静态网站托管
+
+---
+
 ## ✨ 功能特点
 
 ### 核心优势
@@ -48,9 +81,8 @@ express-multi-app-monorepo-template/
 │   └── public/              # 公共静态资源
 ├── scripts/                 # 自动化脚本工具集
 ├── dist/                    # 构建产物统一输出目录（自动生成）
+├── config.js               # 全局配置文件
 ├── apps.config.cjs          # 子项目配置文件
-├── consts.js                # 全局常量配置
-├── vercel.json              # Vercel 部署配置
 └── package.json             # 项目依赖配置
 ```
 
@@ -122,18 +154,18 @@ pnpm dev
 - `name` 字段必须与 `apps/` 目录下的项目文件夹名称**完全一致**
 - `server/src/data/apps.meta.js` 中的 `name` 也必须与之一致，否则项目卡片无法正确显示
 
-### 路由前缀配置 (`consts.js`)
+### 路由前缀配置 (`config.js`)
 
 默认路由前缀为 `/p`，如需修改：
 
 ```javascript
-// consts.js
-const GLOBAL_ROUTE_PREFIX = '/p' // 修改为你想要的前缀
+// config.js
+const ROUTE_PREFIX = '/p' // 修改为你想要的前缀
 ```
 
 修改后需手动同步更新所有子项目的 base 路径配置。
 
-**重要说明**：由于各框架的 base 配置名称不统一（Vue/Vite 用 `base`、Next.js 用 `basePath`、Nuxt 用 `runtimeConfig.public.baseURL`），且子项目相互独立，脚本无法自动统一处理。因此 `GLOBAL_ROUTE_PREFIX` 仅控制 Express 路由层，子项目的 base 路径需用户根据实际情况手动配置。
+**重要说明**：由于各框架的 base 配置名称不统一（Vue/Vite 用 `base`、Next.js 用 `basePath`、Nuxt 用 `runtimeConfig.public.baseURL`），且子项目相互独立，脚本无法自动统一处理。因此 `ROUTE_PREFIX` 仅控制 Express 路由层，子项目的 base 路径需用户根据实际情况手动配置。
 
 ## 📖 路由规则
 
@@ -203,20 +235,6 @@ pnpm build:app react-spa
 | **开发** | `pnpm dev`                | 启动 Express 服务器                |
 | <br />   | `pnpm dev:app <name>`     | 启动指定项目的开发服务器           |
 
-## 🎯 适用场景
-
-- **个人作品集**：一个域名展示多个项目作品
-- **个人博客**：Hexo/VuePress 等静态博客托管
-- **文档站点**：多个项目文档统一管理
-- **微前端架构**：多个独立前端应用集成
-- **原型展示**：快速展示多个项目原型
-
-## ⚠️ 注意事项
-
-- 所有子项目必须设置正确的 `baseURL`，否则会出现资源加载失败
-- 构建产物必须是静态资源，不支持 SSR 服务端渲染
-- `apps.config.cjs` 和 `apps.meta.js` 中的 `name` 必须与 `apps/` 目录下的项目文件夹名称一致
-
 ## 💡 优缺点分析
 
 ### 优点
@@ -269,13 +287,15 @@ pnpm build:app react-spa
 
 > 待补充
 
-### ⚠️ 重要提示
+---
 
-> **当前方案仅适合个人演示项目，不适合正式商业项目！**
->
-> - **适用场景**：个人作品集、技术博客、项目原型、学习 Demo
-> - **不适用场景**：企业级应用、高流量网站、电商平台、支付系统
-> - **核心原因**：性能受限、资源配额有限、缺乏专业级运维能力
+## ⚠️ 注意事项
+
+- 所有子项目必须设置正确的 `baseURL`，否则会出现资源加载失败
+- 构建产物必须是静态资源，不支持 SSR 服务端渲染
+- `apps.config.cjs` 和 `apps.meta.js` 中的 `name` 必须与 `apps/` 目录下的项目文件夹名称一致
+
+---
 
 ## 🔧 自定义页面
 
@@ -297,7 +317,3 @@ MIT License
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
-
----
-
-**提示**：非常适合用作个人介绍页、个人博客、作品集等轻量项目的统一托管方案。
