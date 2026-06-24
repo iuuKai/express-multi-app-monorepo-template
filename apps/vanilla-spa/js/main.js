@@ -1,4 +1,6 @@
 $(function () {
+	const BASE_URL = '/p/vanilla-spa/'
+
 	const $container = $('#viewContainer')
 	// 页面地址映射
 	const pageMap = {
