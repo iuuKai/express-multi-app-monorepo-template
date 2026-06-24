@@ -1,11 +1,9 @@
 import type { NextConfig } from 'next'
 
-const BASE_URL = '/p/next-ssg'
-
 const nextConfig: NextConfig = {
 	/* config options here */
 	output: 'export',
-	basePath: BASE_URL,
+	basePath: '/p/next-ssg',
 	images: {
 		unoptimized: true
 	}
