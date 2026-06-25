@@ -2,13 +2,29 @@ const fs = require('fs')
 const path = require('path')
 const APPS_CONFIG = require('../apps.config.cjs')
 
-// 递归删除目录
-function deleteDir(dir) {
-	if (fs.existsSync(dir)) {
-		fs.rmSync(dir, { recursive: true })
+function existsPath(path) {
+	try {
+		fs.lstatSync(path)
 		return true
+	} catch {
+		return false
 	}
-	return false
+}
+
+function deleteDir(dir) {
+	try {
+		const stat = fs.lstatSync(dir)
+		if (stat.isSymbolicLink()) {
+			fs.unlinkSync(dir)
+		} else if (stat.isDirectory()) {
+			fs.rmSync(dir, { recursive: true, force: true })
+		} else {
+			fs.unlinkSync(dir)
+		}
+		return true
+	} catch {
+		return false
+	}
 }
 
 // =========================================
@@ -32,7 +48,7 @@ function cleanDeepSingle(appName) {
 
 	console.log(`\n=== 正在深度清理 ${proj.name}（包括 node_modules 和缓存）===`)
 
-	if (!fs.existsSync(appRoot)) {
+	if (!existsPath(appRoot)) {
 		console.log(`❌ 项目目录不存在: ${appRoot}`)
 		process.exit(1)
 	}
@@ -42,7 +58,7 @@ function cleanDeepSingle(appName) {
 	// 1. 清空根目录 dist 下对应的项目
 	const rootDistPath = path.join(rootDir, 'dist', proj.name)
 	console.log(`\n📁 检查根目录 dist: ${rootDistPath}`)
-	if (fs.existsSync(rootDistPath)) {
+	if (existsPath(rootDistPath)) {
 		deleteDir(rootDistPath)
 		console.log(`✅ 已清空根目录 dist/${proj.name}/`)
 		cleaned = true
@@ -53,7 +69,7 @@ function cleanDeepSingle(appName) {
 	// 2. 清理 node_modules
 	const nodeModulesDir = path.join(appRoot, 'node_modules')
 	console.log(`\n📁 检查 node_modules: ${nodeModulesDir}`)
-	if (fs.existsSync(nodeModulesDir)) {
+	if (existsPath(nodeModulesDir)) {
 		deleteDir(nodeModulesDir)
 		console.log(`✅ 已删除 node_modules/`)
 		cleaned = true
@@ -65,7 +81,7 @@ function cleanDeepSingle(appName) {
 	if (proj.outputDir) {
 		const projectDist = path.resolve(rootDir, proj.outputDir)
 		console.log(`\n📁 检查构建产物: ${projectDist}`)
-		if (fs.existsSync(projectDist)) {
+		if (existsPath(projectDist)) {
 			deleteDir(projectDist)
 			console.log(`✅ 已删除 dist: ${proj.outputDir}/`)
 			cleaned = true
@@ -79,7 +95,7 @@ function cleanDeepSingle(appName) {
 	console.log(`\n📁 检查缓存目录:`)
 	cacheDirs.forEach(cacheDir => {
 		const cachePath = path.join(appRoot, cacheDir)
-		if (fs.existsSync(cachePath)) {
+		if (existsPath(cachePath)) {
 			deleteDir(cachePath)
 			console.log(`✅ 已删除缓存: ${cacheDir}/`)
 			cleaned = true

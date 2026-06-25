@@ -2,13 +2,29 @@ const fs = require('fs')
 const path = require('path')
 const APPS_CONFIG = require('../apps.config.cjs')
 
-// 递归删除目录
-function deleteDir(dir) {
-	if (fs.existsSync(dir)) {
-		fs.rmSync(dir, { recursive: true })
+function existsPath(path) {
+	try {
+		fs.lstatSync(path)
 		return true
+	} catch {
+		return false
 	}
-	return false
+}
+
+function deleteDir(dir) {
+	try {
+		const stat = fs.lstatSync(dir)
+		if (stat.isSymbolicLink()) {
+			fs.unlinkSync(dir)
+		} else if (stat.isDirectory()) {
+			fs.rmSync(dir, { recursive: true, force: true })
+		} else {
+			fs.unlinkSync(dir)
+		}
+		return true
+	} catch {
+		return false
+	}
 }
 
 // =========================================
@@ -36,7 +52,7 @@ function cleanSingle(appName) {
 	// 1. 清空根目录 dist 下对应的项目
 	const rootDistPath = path.join(rootDir, 'dist', proj.name)
 	console.log(`\n📁 检查根目录 dist: ${rootDistPath}`)
-	if (fs.existsSync(rootDistPath)) {
+	if (existsPath(rootDistPath)) {
 		deleteDir(rootDistPath)
 		console.log(`✅ 已清空根目录 dist/${proj.name}/`)
 		cleaned = true
