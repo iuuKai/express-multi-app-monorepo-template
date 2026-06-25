@@ -99,7 +99,7 @@ function cleanDeep() {
 		}
 
 		// 清理常见缓存目录
-		const cacheDirs = ['.next', '.nuxt', '.output', '.vite', 'dist', 'build', '.turbo']
+		const cacheDirs = ['.next', '.nuxt', '.astro', '.output', '.vite', 'dist', 'build', '.turbo']
 		cacheDirs.forEach(cacheDir => {
 			const cachePath = path.join(appRoot, cacheDir)
 			if (existsPath(cachePath)) {

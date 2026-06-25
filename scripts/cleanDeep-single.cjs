@@ -91,7 +91,7 @@ function cleanDeepSingle(appName) {
 	}
 
 	// 4. 清理常见缓存目录
-	const cacheDirs = ['.next', '.nuxt', '.output', '.vite', 'dist', 'build', '.turbo']
+	const cacheDirs = ['.next', '.nuxt', '.astro', '.output', '.vite', 'dist', 'build', '.turbo']
 	console.log(`\n📁 检查缓存目录:`)
 	cacheDirs.forEach(cacheDir => {
 		const cachePath = path.join(appRoot, cacheDir)
