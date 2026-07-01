@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const path = require('path')
 const fs = require('fs')
-const { GLOBAL_ROUTE_PREFIX } = require('../../../consts')
+const { ROUTE_PREFIX } = require('../../../config.js')
 const APPS_CONFIG = require('../../../apps.config.cjs')
 const METAS = require('../data/apps.meta.js')
 
@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 		// 生成项目链接 HTML
 		const appsLinks = appInfoData
 			.map(item => {
-				const route = `${GLOBAL_ROUTE_PREFIX}/${item.name}`
+				const route = `${ROUTE_PREFIX}/${item.name}`
 				const title = item.name
 				return `<a href="${route}" class="card" data-type="${item.type}" target="_blank">
 					<div class="card-img">
